@@ -7,54 +7,159 @@
     >
       <div class="d-flex align-center">
         <v-img
-          alt="Vuetify Logo"
+          alt="Culoud Logo"
           class="shrink mr-2"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          :src="require('@/assets/logo.png')"
           transition="scale-transition"
           width="40"
         />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
       </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+      <v-btn text v-if="!isLogin">
+        <span class="mr-2" @click="login">ログイン</span>
       </v-btn>
+      <v-btn text v-if="!isLogin">
+        <span class="mr-2" @click="register">新しく登録</span>
+      </v-btn>
+      <v-btn text v-if="isLogin">
+        <span class="mr-2" @click="createRoom">部屋を作成</span>
+      </v-btn>
+      <v-btn text v-if="isLogin">
+        <span class="mr-2" @click="logout">ログアウト</span>
+      </v-btn>
+      <template v-slot:extension v-if="isLogin">
+        <v-tabs v-model="tabModel" align-with-title>
+          <v-tab href="#home">Home</v-tab>
+          <v-tab v-for="room in joinnedRooms"
+          :key="room.created_at"
+          :href="'#'+room.id">
+            {{ room.name }}
+          </v-tab>
+        </v-tabs>
+      </template>
     </v-app-bar>
-
     <v-main>
-      <HelloWorld/>
+      <v-tabs-items v-model="tabModel" v-if="isLogin">
+        <v-tab-item v-for="room in rooms" :key="room.created_at" :value="room.id">
+         this is {{ room.name }}
+        </v-tab-item>
+        <v-tab-item value="home">
+          <HomeObject ref="homeObj" @join="join" />
+        </v-tab-item>
+      </v-tabs-items>
+      <LoginObject v-if="showLogin" ref="login" @done="afterLogin" />
+      <NoticeDialog ref="notice" />
+      <RegisterDialog ref="register" @done="afterRegister" />
+      <CreateRoomDialog ref="createRoom" @done="afterCreateRoom" />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import io from 'socket.io-client';
+import HomeObject from './components/HomeObject.vue';
+import CreateRoomDialog from './components/CreateRoomDialog.vue';
+import RegisterDialog from './components/RegisterDialog.vue';
+import LoginObject from './components/LoginObject.vue';
+import NoticeDialog from './components/NoticeDialog.vue';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    HomeObject,
+    NoticeDialog,
+    LoginObject,
+    RegisterDialog,
+    CreateRoomDialog,
+  },
+  mounted() {
+    this.roomSock.on('rooms', (data) => {
+      if (this.$refs.homeObj) this.$refs.homeObj.$emit('update', data);
+    });
+    this.roomSock.on('joinned_rooms', (data) => {
+      this.joinnedRooms = data;
+    });
+    this.roomSock.on('join', (data) => {
+      this.talklog[data.room].push(data);
+    });
+    this.roomSock.on('leave', (data) => {
+      this.talklog[data.room].push(data);
+    });
+    this.chatSock.on('message', (data) => {
+      this.talklog[data.room].push(data);
+    });
+    this.authSock.on('notice', (data) => {
+      this.$refs.notice.$emit('open', data.message);
+    });
+    this.authSock.on('error', (data) => {
+      this.$refs.notice.emit('open', data.message);
+    });
+    this.authSock.on('login', (data) => {
+      this.id = data.id;
+      this.isLogin = data.login;
+      if (this.islogin) {
+        this.showLogin = false;
+      }
+    });
+  },
+  methods: {
+    login() {
+      this.showLogin = true;
+    },
+    afterLogin(id, password) {
+      console.log(id, password);
+      this.authSock.emit('login', { id, password });
+      // this.isLogin = true;
+    },
+    register() {
+      this.$refs.register.$emit('open');
+    },
+    afterRegister(name, id, password, email) {
+      this.authSock.emit('register', {
+        name, id, password, email,
+      });
+    },
+    logout() {
+      this.authSock.emit('logout');
+    },
+    afterLogout() {
+      this.isLogin = false;
+    },
+    createRoom() {
+      this.$refs.createRoom.$emit('open');
+    },
+    afterCreateRoom(name) {
+      this.roomSock.emit('create_room', { name });
+    },
+    join(room) {
+      this.roomSock.emit('join_room', { room });
+    },
+    leave() {
+
+    },
+    send() {
+
+    },
+    invite() {
+
+    },
+  },
+  data() {
+    return {
+      id: '',
+      domain: '',
+      authSock: io.connect('localhost:5000/auth'),
+      roomSock: io.connect('localhost:5000/room'),
+      chatSock: io.connect('localhost:5000/chat'),
+      isLogin: false,
+      showLogin: false,
+      joinnedRooms: [],
+      userName: '',
+      tabModel: 'home',
+      debug: 'none',
+    };
   },
 
-  data: () => ({
-    //
-  }),
 };
 </script>
