@@ -44,7 +44,7 @@
          this is {{ room.name }}
         </v-tab-item>
         <v-tab-item value="home">
-          <HomeObject ref="homeObj" @get="getAllRooms" @join="join" />
+          <HomeObject ref="homeObj" @getRooms="getAllRooms" @join="join" />
         </v-tab-item>
       </v-tabs-items>
       <LoginDialog ref="login" @done="afterLogin" />

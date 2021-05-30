@@ -17,7 +17,7 @@ export default {
     });
   },
   mounted() {
-    this.$emit('get');
+    this.$emit('getRooms');
   },
   methods: {
     join(room) {
