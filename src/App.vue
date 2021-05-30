@@ -47,7 +47,7 @@
           <HomeObject ref="homeObj" @join="join" />
         </v-tab-item>
       </v-tabs-items>
-      <LoginObject v-if="showLogin" ref="login" @done="afterLogin" />
+      <LoginDialog v-if="showLogin" ref="login" @done="afterLogin" />
       <NoticeDialog ref="notice" />
       <RegisterDialog ref="register" @done="afterRegister" />
       <CreateRoomDialog ref="createRoom" @done="afterCreateRoom" />
@@ -60,7 +60,7 @@ import io from 'socket.io-client';
 import HomeObject from './components/HomeObject.vue';
 import CreateRoomDialog from './components/CreateRoomDialog.vue';
 import RegisterDialog from './components/RegisterDialog.vue';
-import LoginObject from './components/LoginObject.vue';
+import LoginDialog from './components/LoginDialog.vue';
 import NoticeDialog from './components/NoticeDialog.vue';
 
 export default {
@@ -69,7 +69,7 @@ export default {
   components: {
     HomeObject,
     NoticeDialog,
-    LoginObject,
+    LoginDialog,
     RegisterDialog,
     CreateRoomDialog,
   },
