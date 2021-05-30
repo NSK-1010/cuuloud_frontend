@@ -13,7 +13,7 @@
       </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn class="info" @click="submit">登録</v-btn>
+        <v-btn class="info" @click="submit">ログイン</v-btn>
         <v-btn @click="dialog = false">閉じる</v-btn>
       </v-card-actions>
     </v-card>
@@ -22,6 +22,11 @@
 <script>
 export default {
   name: 'LoginDialog',
+  created() {
+    this.$on('open', () => {
+      this.dialog = true;
+    });
+  },
   methods: {
     submit() {
       this.$emit('done', this.id, this.password);
@@ -29,6 +34,7 @@ export default {
   },
   data() {
     return {
+      dialog: false,
       showPassword: false,
       id: '',
       password: '',
