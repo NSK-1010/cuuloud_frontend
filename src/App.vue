@@ -44,7 +44,7 @@
          this is {{ room.name }}
         </v-tab-item>
         <v-tab-item value="home">
-          <HomeObject ref="homeObj" @join="join" />
+          <HomeObject ref="homeObj" @get="getAllRooms" @join="join" />
         </v-tab-item>
       </v-tabs-items>
       <LoginDialog ref="login" @done="afterLogin" />
@@ -98,8 +98,8 @@ export default {
     this.authSock.on('login', (data) => {
       this.id = data.id;
       this.isLogin = data.login;
-      if (this.islogin) {
-        this.showLogin = false;
+      if (data.login) {
+        this.$refs.login.$emit('close');
       }
     });
   },
@@ -108,7 +108,6 @@ export default {
       this.$refs.login.$emit('open');
     },
     afterLogin(id, password) {
-      console.log(id, password);
       this.authSock.emit('login', { id, password });
       // this.isLogin = true;
     },
@@ -143,6 +142,9 @@ export default {
     },
     invite() {
 
+    },
+    getAllRooms() {
+      this.roomSock.emit('get_all_rooms');
     },
   },
   data() {
