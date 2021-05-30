@@ -28,11 +28,10 @@
         <span class="mr-2" @click="logout">ログアウト</span>
       </v-btn>
       <template v-slot:extension v-if="isLogin">
-        <v-tabs v-model="tabModel" align-with-title>
+        <v-tabs v-model="tabModel">
           <v-tab href="#home">Home</v-tab>
           <v-tab v-for="room in joinnedRooms"
-          :key="room.created_at"
-          :href="'#'+room.id">
+          :key="room.id" :href="'#'+room.id">
             {{ room.name }}
           </v-tab>
         </v-tabs>
@@ -40,11 +39,12 @@
     </v-app-bar>
     <v-main>
       <v-tabs-items v-model="tabModel" v-if="isLogin">
-        <v-tab-item v-for="room in rooms" :key="room.created_at" :value="room.id">
-         this is {{ room.name }}
-        </v-tab-item>
         <v-tab-item value="home">
-          <HomeObject ref="homeObj" @getRooms="getAllRooms" @join="join" />
+          <HomeObject ref="homeObj" @join="join" />
+        </v-tab-item>
+        <v-tab-item v-for="room in joinnedRooms"
+        :key="room.id" :value="room.id">
+         this is {{ room.name }}
         </v-tab-item>
       </v-tabs-items>
       <LoginDialog ref="login" @done="afterLogin" />
@@ -100,6 +100,7 @@ export default {
       this.isLogin = data.login;
       if (data.login) {
         this.$refs.login.$emit('close');
+        this.roomSock.emit('get_all_rooms');
       }
     });
   },
@@ -141,10 +142,6 @@ export default {
 
     },
     invite() {
-
-    },
-    getAllRooms() {
-      this.roomSock.emit('get_all_rooms');
     },
   },
   data() {
@@ -161,6 +158,5 @@ export default {
       debug: 'none',
     };
   },
-
 };
 </script>
