@@ -1,24 +1,17 @@
 # frontend
 
-## Project setup
+## How to build
 ```
+git clone https://github.com/NaiwTeam/cuuloud_backend.git
+git clone https://github.com/NaiwTeam/cuuloud_frontend.git
+cd cuuloud_frontend
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
 npm run build
 ```
 
-### Lints and fixes files
+## How to run
 ```
-npm run lint
+cd cuuloud_backend
+pip install -r requirements.txt
+flask run
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
