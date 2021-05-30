@@ -28,11 +28,10 @@
         <span class="mr-2" @click="logout">ログアウト</span>
       </v-btn>
       <template v-slot:extension v-if="isLogin">
-        <v-tabs v-model="tabModel" align-with-title>
+        <v-tabs v-model="tabModel">
           <v-tab href="#home">Home</v-tab>
           <v-tab v-for="room in joinnedRooms"
-          :key="room.created_at"
-          :href="'#'+room.id">
+          :key="room.id" :href="'#'+room.id">
             {{ room.name }}
           </v-tab>
         </v-tabs>
@@ -40,14 +39,15 @@
     </v-app-bar>
     <v-main>
       <v-tabs-items v-model="tabModel" v-if="isLogin">
-        <v-tab-item v-for="room in rooms" :key="room.created_at" :value="room.id">
-         this is {{ room.name }}
-        </v-tab-item>
         <v-tab-item value="home">
           <HomeObject ref="homeObj" @join="join" />
         </v-tab-item>
+        <v-tab-item v-for="room in joinnedRooms"
+        :key="room.id" :value="room.id">
+         this is {{ room.name }}
+        </v-tab-item>
       </v-tabs-items>
-      <LoginDialog v-if="showLogin" ref="login" @done="afterLogin" />
+      <LoginDialog ref="login" @done="afterLogin" />
       <NoticeDialog ref="notice" />
       <RegisterDialog ref="register" @done="afterRegister" />
       <CreateRoomDialog ref="createRoom" @done="afterCreateRoom" />
@@ -98,17 +98,17 @@ export default {
     this.authSock.on('login', (data) => {
       this.id = data.id;
       this.isLogin = data.login;
-      if (this.islogin) {
-        this.showLogin = false;
+      if (data.login) {
+        this.$refs.login.$emit('close');
+        this.roomSock.emit('get_all_rooms');
       }
     });
   },
   methods: {
     login() {
-      this.showLogin = true;
+      this.$refs.login.$emit('open');
     },
     afterLogin(id, password) {
-      console.log(id, password);
       this.authSock.emit('login', { id, password });
       // this.isLogin = true;
     },
@@ -124,7 +124,7 @@ export default {
       this.authSock.emit('logout');
     },
     afterLogout() {
-      this.isLogin = false;
+      this.$refs.login.$emit('open');
     },
     createRoom() {
       this.$refs.createRoom.$emit('open');
@@ -142,7 +142,6 @@ export default {
 
     },
     invite() {
-
     },
   },
   data() {
@@ -153,13 +152,11 @@ export default {
       roomSock: io.connect('localhost:5000/room'),
       chatSock: io.connect('localhost:5000/chat'),
       isLogin: false,
-      showLogin: false,
       joinnedRooms: [],
       userName: '',
       tabModel: 'home',
       debug: 'none',
     };
   },
-
 };
 </script>

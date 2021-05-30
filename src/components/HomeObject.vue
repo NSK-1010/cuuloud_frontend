@@ -16,6 +16,9 @@ export default {
       this.rooms = data;
     });
   },
+  mounted() {
+    this.$emit('getRooms');
+  },
   methods: {
     join(room) {
       this.$emit('join', room);
