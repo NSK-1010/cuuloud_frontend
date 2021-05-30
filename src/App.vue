@@ -47,7 +47,7 @@
           <HomeObject ref="homeObj" @join="join" />
         </v-tab-item>
       </v-tabs-items>
-      <LoginDialog v-if="showLogin" ref="login" @done="afterLogin" />
+      <LoginDialog ref="login" @done="afterLogin" />
       <NoticeDialog ref="notice" />
       <RegisterDialog ref="register" @done="afterRegister" />
       <CreateRoomDialog ref="createRoom" @done="afterCreateRoom" />
@@ -105,7 +105,7 @@ export default {
   },
   methods: {
     login() {
-      this.showLogin = true;
+      this.$refs.login.$emit('open');
     },
     afterLogin(id, password) {
       console.log(id, password);
@@ -124,7 +124,7 @@ export default {
       this.authSock.emit('logout');
     },
     afterLogout() {
-      this.isLogin = false;
+      this.$refs.login.$emit('open');
     },
     createRoom() {
       this.$refs.createRoom.$emit('open');
@@ -153,7 +153,6 @@ export default {
       roomSock: io.connect('localhost:5000/room'),
       chatSock: io.connect('localhost:5000/chat'),
       isLogin: false,
-      showLogin: false,
       joinnedRooms: [],
       userName: '',
       tabModel: 'home',
