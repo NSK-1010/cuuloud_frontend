@@ -4,17 +4,17 @@
       <v-card-title>ログイン</v-card-title>
       <v-card-text>
       <v-form>
-        <v-text-field label="ユーザーID" v-model="id" />
+        <v-text-field label="ユーザーID" v-model="id" type="text" autocomplete="username" />
         <v-text-field
         @click:append="showPassword = !showPassword"
         :type="showPassword ? 'text' : 'password'"
         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-        label="パスワード" v-model="password" />
+        label="パスワード" v-model="password"  @keyup.enter="submit"/>
       </v-form>
       <v-progress-linear v-if="logining" indeterminate />
       </v-card-text>
       <v-card-actions>
-        <v-btn v-if="!logining" class="info" @click="submit">ログイン</v-btn>
+        <v-btn v-if="!logining" class="info" type="submit" @click="submit">ログイン</v-btn>
         <v-btn v-if="!logining" @click="dialog = false">閉じる</v-btn>
       </v-card-actions>
     </v-card>

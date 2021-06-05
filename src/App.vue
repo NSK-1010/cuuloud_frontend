@@ -44,7 +44,7 @@
         </v-tab-item>
         <v-tab-item v-for="room in joinnedRooms"
         :key="room.id" :value="room.id">
-         this is {{ room.name }}
+          <ChatObject @send="sendMessage" :ref="'chat'+room.id" :name="room.name" :id="room.id">
         </v-tab-item>
       </v-tabs-items>
       <LoginDialog ref="login" @done="afterLogin" />
@@ -62,12 +62,14 @@ import CreateRoomDialog from './components/CreateRoomDialog.vue';
 import RegisterDialog from './components/RegisterDialog.vue';
 import LoginDialog from './components/LoginDialog.vue';
 import NoticeDialog from './components/NoticeDialog.vue';
+import ChatObject from './components/ChatObject.vue';
 
 export default {
   name: 'App',
 
   components: {
     HomeObject,
+    ChatObject,
     NoticeDialog,
     LoginDialog,
     RegisterDialog,
@@ -86,8 +88,8 @@ export default {
     this.roomSock.on('leave', (data) => {
       this.talklog[data.room].push(data);
     });
-    this.chatSock.on('message', (data) => {
-      this.talklog[data.room].push(data);
+    this.roomSock.on('message', (data) => {
+      this.refs[data.room].$emit('recieve', data);
     });
     this.authSock.on('notice', (data) => {
       this.$refs.notice.$emit('open', data.message);
@@ -143,6 +145,9 @@ export default {
     },
     invite() {
     },
+    sendMessage(id, text) {
+      this.roomSock.emit('message', { text, id });
+    },
   },
   data() {
     return {
@@ -150,7 +155,6 @@ export default {
       domain: '',
       authSock: io.connect('localhost:5000/auth'),
       roomSock: io.connect('localhost:5000/room'),
-      chatSock: io.connect('localhost:5000/chat'),
       isLogin: false,
       joinnedRooms: [],
       userName: '',
