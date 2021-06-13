@@ -83,13 +83,19 @@ export default {
       this.joinnedRooms = data;
     });
     this.roomSock.on('join', (data) => {
-      this.talklog[data.room].push(data);
+      const obj = data;
+      obj.type = 'join';
+      this.refs[data.room].$emit('recieve', obj);
     });
     this.roomSock.on('leave', (data) => {
-      this.talklog[data.room].push(data);
+      const obj = data;
+      obj.type = 'leave';
+      this.refs[data.room].$emit('recieve', obj);
     });
     this.roomSock.on('message', (data) => {
-      this.refs[data.room].$emit('recieve', data);
+      const obj = data;
+      obj.type = 'message';
+      this.refs[data.room].$emit('recieve', obj);
     });
     this.authSock.on('notice', (data) => {
       this.$refs.notice.$emit('open', data.message);
