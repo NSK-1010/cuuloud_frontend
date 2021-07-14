@@ -25,6 +25,9 @@
         <span class="mr-2" @click="createRoom">部屋を作成</span>
       </v-btn>
       <v-btn text v-if="isLogin">
+        <span class="mr-2" @click="invite">招待する</span>
+      </v-btn>
+      <v-btn text v-if="isLogin">
         <span class="mr-2" @click="logout">ログアウト</span>
       </v-btn>
       <template v-slot:extension v-if="isLogin">
@@ -44,7 +47,8 @@
         </v-tab-item>
         <v-tab-item v-for="room in joinnedRooms"
         :key="room.id" :value="room.id">
-          <ChatObject @send="sendMessage" :ref="'chat'+room.id" :name="room.name" :id="room.id">
+          <ChatObject @send="sendMessage" :ref="room.id"
+          :name="room.name" :roomId="room.id" :userId="id">
         </v-tab-item>
       </v-tabs-items>
       <LoginDialog ref="login" @done="afterLogin" />
@@ -85,17 +89,17 @@ export default {
     this.roomSock.on('join', (data) => {
       const obj = data;
       obj.type = 'join';
-      this.refs[data.room].$emit('recieve', obj);
+      this.refs[data.room_id][0].$emit('recieve', obj);
     });
     this.roomSock.on('leave', (data) => {
       const obj = data;
       obj.type = 'leave';
-      this.refs[data.room].$emit('recieve', obj);
+      this.refs[data.room_id][0].$emit('recieve', obj);
     });
     this.roomSock.on('message', (data) => {
       const obj = data;
       obj.type = 'message';
-      this.refs[data.room].$emit('recieve', obj);
+      this.$refs[data.room_id][0].$emit('recieve', obj);
     });
     this.authSock.on('notice', (data) => {
       this.$refs.notice.$emit('open', data.message);
@@ -151,8 +155,8 @@ export default {
     },
     invite() {
     },
-    sendMessage(id, text) {
-      this.roomSock.emit('message', { text, id });
+    sendMessage(roomId, text) {
+      this.roomSock.emit('message', { text, id: roomId });
     },
   },
   data() {
