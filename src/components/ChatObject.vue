@@ -45,7 +45,6 @@ export default {
   props: ['name', 'roomId', 'userId'],
   created() {
     this.$on('recieve', (data) => {
-      console.log(data);
       this.chatlog.push(data);
     });
   },
