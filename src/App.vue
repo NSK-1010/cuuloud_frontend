@@ -58,7 +58,21 @@
     </v-main>
   </v-app>
 </template>
+<style>
+.scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
 
+.scrollbar::-webkit-scrollbar-track {
+  border-radius: 5px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+border-radius: 5px;
+background: #00b4ff;
+}
+</style>
 <script>
 import io from 'socket.io-client';
 import HomeObject from './components/HomeObject.vue';
@@ -108,6 +122,7 @@ export default {
       this.$refs.notice.emit('open', data.message);
     });
     this.authSock.on('login', (data) => {
+      this.isResponce = true;
       this.id = data.id;
       this.isLogin = data.login;
       if (data.login) {
@@ -121,31 +136,82 @@ export default {
       this.$refs.login.$emit('open');
     },
     afterLogin(id, password) {
+      this.isListening = true;
       this.authSock.emit('login', { id, password });
-      // this.isLogin = true;
+      setTimeout(() => {
+        if (this.isListening && !this.isResponce) {
+          this.isLogin = false;
+          this.isListening = false;
+          this.$refs.login.$emit('close');
+        } else {
+          this.isResponce = false;
+        }
+      }, 10000);
     },
     register() {
       this.$refs.register.$emit('open');
     },
     afterRegister(name, id, password, email) {
+      this.isListening = true;
       this.authSock.emit('register', {
         name, id, password, email,
+      });
+      setTimeout(() => {
+        if (this.isListening && !this.isResponce) {
+          this.isLogin = false;
+          this.isListening = false;
+          this.$refs.login.$emit('close');
+        } else {
+          this.isResponce = false;
+        }
       });
     },
     logout() {
       this.authSock.emit('logout');
     },
     afterLogout() {
+      this.isListening = true;
       this.$refs.login.$emit('open');
+      setTimeout(() => {
+        if (this.isListening && !this.isResponce) {
+          this.isLogin = false;
+          this.isListening = false;
+          this.$refs.login.$emit('close');
+        } else {
+          this.isResponce = false;
+        }
+      });
     },
     createRoom() {
       this.$refs.createRoom.$emit('open');
     },
     afterCreateRoom(name) {
+      this.isListening = true;
       this.roomSock.emit('create_room', { name });
+      setTimeout(() => {
+        if (this.isListening && !this.isResponce) {
+          this.isLogin = false;
+          this.isListening = false;
+          this.$refs.createRoom.$emit('close');
+        } else {
+          this.isResponce = false;
+        }
+      });
     },
     join(room) {
+      this.isListening = true;
       this.roomSock.emit('join_room', { room });
+      setTimeout(() => {
+        if (this.isListening && !this.isResponce) {
+          this.isLogin = false;
+          this.isListening = false;
+        } else {
+          this.isResponce = false;
+        }
+      });
+    },
+    error() {
+
     },
     leave() {
 
@@ -156,6 +222,7 @@ export default {
     invite() {
     },
     sendMessage(roomId, text) {
+      this.isListening = true;
       this.roomSock.emit('message', { text, id: roomId });
     },
   },
@@ -170,6 +237,8 @@ export default {
       userName: '',
       tabModel: 'home',
       debug: 'none',
+      isResponce: false,
+      isListening: false,
     };
   },
 };

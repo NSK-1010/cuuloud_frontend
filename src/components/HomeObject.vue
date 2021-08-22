@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div class="scrollbar" style="
+  overflow: auto;
+  height: calc(100vh - 112px);">
     <v-card style="margin:10px;" elevation="7" shaped v-for="room in rooms" :key="room.created_at">
       <v-card-title>{{ room.name }}</v-card-title>
       <v-card-actions>
