@@ -25,10 +25,11 @@ export default {
   name: 'LoginDialog',
   created() {
     this.$on('open', () => {
+      this.logining = false;
       this.dialog = true;
     });
     this.$on('close', () => {
-      this.logining = true;
+      this.logining = false;
       this.dialog = false;
     });
   },

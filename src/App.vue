@@ -47,14 +47,14 @@
         </v-tab-item>
         <v-tab-item v-for="room in joinnedRooms"
         :key="room.id" :value="room.id">
-          <ChatObject @send="sendMessage" :ref="room.id"
+          <ChatObject @send="sendMessage" @leave="leave" :ref="room.id"
           :name="room.name" :roomId="room.id" :userId="id">
         </v-tab-item>
       </v-tabs-items>
-      <LoginDialog ref="login" @done="afterLogin" />
+      <LoginDialog ref="login" @done="afterSubmitLogin" />
       <NoticeDialog ref="notice" />
-      <RegisterDialog ref="register" @done="afterRegister" />
-      <CreateRoomDialog ref="createRoom" @done="afterCreateRoom" />
+      <RegisterDialog ref="register" @done="afterSubmitRegister" />
+      <CreateRoomDialog ref="createRoom" @done="afterSubmitCreateRoom" />
     </v-main>
   </v-app>
 </template>
@@ -121,13 +121,23 @@ export default {
     this.authSock.on('error', (data) => {
       this.$refs.notice.emit('open', data.message);
     });
+    this.authSock.on('registed', () => {
+      if (this.isAuthListening) {
+        this.isAuthListening = false;
+        this.isAuthResponce = true;
+        this.$refs.notice.$emit('open', '登録が完了しました！');
+      }
+    });
     this.authSock.on('login', (data) => {
-      this.isResponce = true;
-      this.id = data.id;
-      this.isLogin = data.login;
-      if (data.login) {
-        this.$refs.login.$emit('close');
-        this.roomSock.emit('get_all_rooms');
+      if (this.isAuthListening) {
+        this.isAuthListening = false;
+        this.isAuthResponce = true;
+        this.id = data.id;
+        this.isLogin = data.login;
+        if (data.login) {
+          this.$refs.login.$emit('close');
+          this.roomSock.emit('get_all_rooms');
+        }
       }
     });
   },
@@ -135,57 +145,50 @@ export default {
     login() {
       this.$refs.login.$emit('open');
     },
-    afterLogin(id, password) {
-      this.isListening = true;
+    afterSubmitLogin(id, password) {
+      this.isAuthResponce = false;
+      this.isAuthListening = true;
       this.authSock.emit('login', { id, password });
       setTimeout(() => {
-        if (this.isListening && !this.isResponce) {
+        if (this.isAuthListening && !this.isAuthResponce) {
           this.isLogin = false;
-          this.isListening = false;
+          this.isAuthListening = false;
           this.$refs.login.$emit('close');
-        } else {
-          this.isResponce = false;
         }
       }, 10000);
     },
     register() {
       this.$refs.register.$emit('open');
     },
-    afterRegister(name, id, password, email) {
-      this.isListening = true;
+    afterSubmitRegister(name, id, password, email) {
+      this.isAuthResponce = false;
+      this.isAuthListening = true;
       this.authSock.emit('register', {
         name, id, password, email,
       });
       setTimeout(() => {
-        if (this.isListening && !this.isResponce) {
+        if (this.isAuthListening && !this.isAuthResponce) {
           this.isLogin = false;
-          this.isListening = false;
+          this.isAuthListening = false;
           this.$refs.login.$emit('close');
-        } else {
-          this.isResponce = false;
         }
       });
     },
     logout() {
+      this.isAuthResponce = false;
+      this.isAuthListening = true;
       this.authSock.emit('logout');
-    },
-    afterLogout() {
-      this.isListening = true;
-      this.$refs.login.$emit('open');
       setTimeout(() => {
-        if (this.isListening && !this.isResponce) {
+        if (this.isAuthListening && !this.isAuthResponce) {
           this.isLogin = false;
-          this.isListening = false;
-          this.$refs.login.$emit('close');
-        } else {
-          this.isResponce = false;
+          this.isAuthListening = false;
         }
       });
     },
     createRoom() {
       this.$refs.createRoom.$emit('open');
     },
-    afterCreateRoom(name) {
+    afterSubmitCreateRoom(name) {
       this.isListening = true;
       this.roomSock.emit('create_room', { name });
       setTimeout(() => {
@@ -199,22 +202,13 @@ export default {
       });
     },
     join(room) {
-      this.isListening = true;
       this.roomSock.emit('join_room', { room });
-      setTimeout(() => {
-        if (this.isListening && !this.isResponce) {
-          this.isLogin = false;
-          this.isListening = false;
-        } else {
-          this.isResponce = false;
-        }
-      });
     },
     error() {
 
     },
-    leave() {
-
+    leave(roomId) {
+      this.roomSock.emit('leave_room', { room: roomId });
     },
     send() {
 
@@ -237,8 +231,8 @@ export default {
       userName: '',
       tabModel: 'home',
       debug: 'none',
-      isResponce: false,
-      isListening: false,
+      isAuthResponce: false,
+      isAuthListening: true,
     };
   },
 };

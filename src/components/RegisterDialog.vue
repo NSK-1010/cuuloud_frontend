@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog">
     <v-card>
-      <v-card-title>ログイン</v-card-title>
+      <v-card-title>参加する（招待されたメールアドレスのみ）</v-card-title>
       <v-card-text>
         <v-form>
           <v-text-field label="ニックネーム" v-model="name" type="text" autocomplete="nickname" />
