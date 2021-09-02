@@ -27,6 +27,10 @@
       <v-btn text v-if="isLogin">
         <span class="mr-2" @click="logout">ログアウト</span>
       </v-btn>
+      <v-toolbar-title v-if="isLogin"
+      style="margin-left: auto;"
+      class="font-weight-regular">
+      ようこそ、{{ userName }}</v-toolbar-title>
       <template v-slot:extension v-if="isLogin">
         <v-tabs v-model="tabModel">
           <v-tab href="#home">Home</v-tab>
@@ -133,6 +137,7 @@ export default {
         this.isAuthListening = false;
         this.isAuthResponce = true;
         this.id = data.id;
+        this.userName = data.name;
         this.isLogin = data.login;
         this.$refs.login.$emit('close');
         if (data.login) {
