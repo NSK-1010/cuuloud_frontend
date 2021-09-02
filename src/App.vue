@@ -22,9 +22,6 @@
         <span class="mr-2" @click="register">新しく登録</span>
       </v-btn>
       <v-btn text v-if="isLogin">
-        <span class="mr-2" @click="createRoom">部屋を作成</span>
-      </v-btn>
-      <v-btn text v-if="isLogin">
         <span class="mr-2" @click="invite">招待する</span>
       </v-btn>
       <v-btn text v-if="isLogin">
@@ -99,7 +96,6 @@ export default {
     });
     this.roomSock.on('joinned_rooms', (data) => {
       this.joinnedRooms = data;
-      console.log(this.joinnedRooms);
     });
     this.roomSock.on('join', (data) => {
       if (data.user_id === this.id) {
