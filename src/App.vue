@@ -43,18 +43,18 @@
     <v-main>
       <v-tabs-items v-model="tabModel" v-if="isLogin">
         <v-tab-item value="home">
-          <HomeObject ref="homeObj" @join="join" />
+          <HomeObject ref="homeObj" @join="join" @create="submitCreateRoom"/>
         </v-tab-item>
         <v-tab-item v-for="room in joinnedRooms"
         :key="room.id" :value="room.id">
           <ChatObject @send="sendMessage" @leave="leave" :ref="room.id"
-          :name="room.name" :roomId="room.id" :userId="id">
+          :name="room.name" :roomId="room.id">
         </v-tab-item>
       </v-tabs-items>
       <LoginDialog ref="login" @done="afterSubmitLogin" />
       <NoticeDialog ref="notice" />
       <RegisterDialog ref="register" @done="afterSubmitRegister" />
-      <CreateRoomDialog ref="createRoom" @done="afterSubmitCreateRoom" />
+      <CreateRoomDialog ref="createRoom" @done="submitCreateRoom" />
     </v-main>
   </v-app>
 </template>
@@ -99,8 +99,12 @@ export default {
     });
     this.roomSock.on('joinned_rooms', (data) => {
       this.joinnedRooms = data;
+      console.log(this.joinnedRooms);
     });
     this.roomSock.on('join', (data) => {
+      if (data.user_id === this.id) {
+        return;
+      }
       const obj = data;
       obj.type = 'join';
       this.refs[data.room_id][0].$emit('recieve', obj);
@@ -119,7 +123,7 @@ export default {
       this.$refs.notice.$emit('open', data.message);
     });
     this.authSock.on('error', (data) => {
-      this.$refs.notice.emit('open', data.message);
+      this.$refs.notice.$emit('open', data.message);
     });
     this.authSock.on('registed', () => {
       if (this.isAuthListening) {
@@ -134,8 +138,8 @@ export default {
         this.isAuthResponce = true;
         this.id = data.id;
         this.isLogin = data.login;
+        this.$refs.login.$emit('close');
         if (data.login) {
-          this.$refs.login.$emit('close');
           this.roomSock.emit('get_all_rooms');
         }
       }
@@ -188,18 +192,8 @@ export default {
     createRoom() {
       this.$refs.createRoom.$emit('open');
     },
-    afterSubmitCreateRoom(name) {
-      this.isListening = true;
+    submitCreateRoom(name) {
       this.roomSock.emit('create_room', { name });
-      setTimeout(() => {
-        if (this.isListening && !this.isResponce) {
-          this.isLogin = false;
-          this.isListening = false;
-          this.$refs.createRoom.$emit('close');
-        } else {
-          this.isResponce = false;
-        }
-      });
     },
     join(room) {
       this.roomSock.emit('join_room', { room });
