@@ -1,9 +1,7 @@
 <template>
   <v-dialog v-model="dialog">
     <v-card>
-      <v-card-text>
-        {{ text }}
-      </v-card-text>
+      <v-card-title>{{ text }}</v-card-title>
       <v-card-actions>
         <v-btn @click="dialog = false">閉じる</v-btn>
       </v-card-actions>
