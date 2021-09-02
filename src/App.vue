@@ -52,10 +52,11 @@
           :name="room.name" :roomId="room.id">
         </v-tab-item>
       </v-tabs-items>
-      <LoginDialog ref="login" @done="afterSubmitLogin" />
-      <NoticeDialog ref="notice" />
-      <RegisterDialog ref="register" @done="afterSubmitRegister" />
+      <LoginDialog ref="login" @done="submitLogin" />
+      <RegisterDialog ref="register" @done="submitRegister" />
       <CreateRoomDialog ref="createRoom" @done="submitCreateRoom" />
+      <InviteDialog ref="invite" @done="submitInvite"/>
+      <NoticeDialog ref="notice" />
     </v-main>
   </v-app>
 </template>
@@ -80,6 +81,7 @@ import HomeObject from './components/HomeObject.vue';
 import CreateRoomDialog from './components/CreateRoomDialog.vue';
 import RegisterDialog from './components/RegisterDialog.vue';
 import LoginDialog from './components/LoginDialog.vue';
+import InviteDialog from './components/InviteDialog.vue';
 import NoticeDialog from './components/NoticeDialog.vue';
 import ChatObject from './components/ChatObject.vue';
 
@@ -89,10 +91,11 @@ export default {
   components: {
     HomeObject,
     ChatObject,
-    NoticeDialog,
     LoginDialog,
     RegisterDialog,
     CreateRoomDialog,
+    InviteDialog,
+    NoticeDialog,
   },
   mounted() {
     this.roomSock.on('rooms', (data) => {
@@ -150,7 +153,7 @@ export default {
     login() {
       this.$refs.login.$emit('open');
     },
-    afterSubmitLogin(id, password) {
+    submitLogin(id, password) {
       this.isAuthResponce = false;
       this.isAuthListening = true;
       this.authSock.emit('login', { id, password });
@@ -165,7 +168,7 @@ export default {
     register() {
       this.$refs.register.$emit('open');
     },
-    afterSubmitRegister(name, id, password, email) {
+    submitRegister(name, id, password, email) {
       this.isAuthResponce = false;
       this.isAuthListening = true;
       this.authSock.emit('register', {
@@ -209,6 +212,10 @@ export default {
 
     },
     invite() {
+      this.$refs.invite.$emit('open');
+    },
+    submitInvite(email) {
+      this.authSock.emit('invite', { email });
     },
     sendMessage(roomId, text) {
       this.isListening = true;
