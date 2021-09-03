@@ -128,17 +128,9 @@ export default {
     this.authSock.on('error', (data) => {
       this.$refs.notice.$emit('open', data.message);
     });
-    this.authSock.on('registed', () => {
-      if (this.isAuthListening) {
-        this.isAuthListening = false;
-        this.isAuthResponce = true;
-        this.$refs.notice.$emit('open', '登録が完了しました！');
-      }
-    });
     this.authSock.on('login', (data) => {
       if (this.isAuthListening) {
         this.isAuthListening = false;
-        this.isAuthResponce = true;
         this.id = data.id;
         this.userName = data.name;
         this.isLogin = data.login;
@@ -158,9 +150,9 @@ export default {
       this.isAuthListening = true;
       this.authSock.emit('login', { id, password });
       setTimeout(() => {
-        if (this.isAuthListening && !this.isAuthResponce) {
-          this.isLogin = false;
+        if (this.isAuthListening) {
           this.isAuthListening = false;
+          this.isLogin = false;
           this.$refs.login.$emit('close');
         }
       }, 10000);
@@ -175,23 +167,21 @@ export default {
         name, id, password, email,
       });
       setTimeout(() => {
-        if (this.isAuthListening && !this.isAuthResponce) {
-          this.isLogin = false;
+        if (this.isAuthListening) {
           this.isAuthListening = false;
-          this.$refs.login.$emit('close');
+          this.isLogin = false;
         }
-      });
+      }, 10000);
     },
     logout() {
       this.isAuthResponce = false;
       this.isAuthListening = true;
       this.authSock.emit('logout');
       setTimeout(() => {
-        if (this.isAuthListening && !this.isAuthResponce) {
-          this.isLogin = false;
+        if (this.isAuthListening) {
           this.isAuthListening = false;
         }
-      });
+      }, 10000);
     },
     createRoom() {
       this.$refs.createRoom.$emit('open');
