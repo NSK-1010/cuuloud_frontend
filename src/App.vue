@@ -71,7 +71,7 @@
 
 .scrollbar::-webkit-scrollbar-thumb {
   border-radius: 5px;
-  background: --v-primary-base;
+  background: var(--v-primary-base);
 }
 </style>
 <script>
