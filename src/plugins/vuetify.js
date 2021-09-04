@@ -17,5 +17,8 @@ export default new Vuetify({
         accent: '#006dce', // #3F51B5
       },
     },
+    options: {
+      customProperties: true,
+    },
   },
 });
