@@ -16,7 +16,9 @@
     <v-card style="margin:10px;" elevation="7" shaped v-for="room in rooms" :key="room.created_at">
       <v-card-title>{{ room.name }}</v-card-title>
       <v-card-actions>
-        <v-icon @click="join(room.id)">mdi-logout-variant</v-icon>
+        <v-btn icon @click="join(room.id)">
+          <v-icon>mdi-logout-variant</v-icon>
+        </v-btn>
       </v-card-actions>
     </v-card>
   </div>

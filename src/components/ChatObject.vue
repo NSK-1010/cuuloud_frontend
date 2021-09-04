@@ -3,7 +3,7 @@
   <div :id="'msarea-'+roomId"
   class="scrollbar" style="
   overflow: auto;
-  height: calc(99vh - 206px);">
+  height: calc(99vh - 222px);">
     <v-card
     style="margin:10px;"
     outlined
@@ -36,11 +36,15 @@
       </v-card-text>
     </v-card>
   </div>
-  <v-card tile outlined height="98">
-      <v-card tile height="32">
+  <v-card tile outlined height="114">
+      <v-card tile height="48">
         <v-card-actions>
-          <v-icon @click="leave">mdi-logout-variant</v-icon>
-          <v-icon>mdi-image</v-icon>
+          <v-btn icon @click="leave">
+            <v-icon>mdi-logout-variant</v-icon>
+          </v-btn>
+          <v-btn icon disabled>
+            <v-icon>mdi-image</v-icon>
+          </v-btn>
         </v-card-actions>
     </v-card>
     <v-card-actions>

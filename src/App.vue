@@ -15,22 +15,22 @@
           width="40"
         />
       </div>
-      <v-btn text v-if="!isLogin">
-        <span class="mr-2" @click="login">ログイン</span>
+      <v-btn text v-if="!isLogin" @click="login">
+        <v-icon>mdi-login</v-icon>
       </v-btn>
-      <v-btn text v-if="!isLogin">
-        <span class="mr-2" @click="register">新しく登録</span>
+      <v-btn text v-if="!isLogin" @click="register">
+        <v-icon>mdi-account-plus</v-icon>
       </v-btn>
-      <v-btn text v-if="isLogin">
-        <span class="mr-2" @click="invite">招待する</span>
+      <v-btn icon v-if="isLogin" @click="invite">
+        <v-icon>mdi-account-multiple-plus</v-icon>
       </v-btn>
-      <v-btn text v-if="isLogin">
-        <span class="mr-2" @click="logout">ログアウト</span>
+      <v-btn text v-if="isLogin" @click="logout">
+        <v-icon>mdi-logout</v-icon>
       </v-btn>
-      <v-toolbar-title v-if="isLogin"
-      style="margin-left: auto;"
-      class="font-weight-regular">
-      ようこそ、{{ userName }}</v-toolbar-title>
+      <v-avatar v-if="isLogin" style="margin-left: auto;" color="teal" size="48">
+        <span class="white--text text-h5">48</span>
+      </v-avatar>
+      ようこそ、{{ userName }}
       <template v-slot:extension v-if="isLogin">
         <v-tabs v-model="tabModel">
           <v-tab href="#home">Home</v-tab>
@@ -125,8 +125,10 @@ export default {
     this.authSock.on('notice', (data) => {
       this.$refs.notice.$emit('open', data.message);
     });
-    this.authSock.on('error', (data) => {
+    this.authSock.on('login_error', (data) => {
       this.$refs.notice.$emit('open', data.message);
+      this.$refs.login.$emit('stop');
+      this.$refs.register.$emit('stop');
     });
     this.authSock.on('login', (data) => {
       if (this.isAuthListening) {
@@ -135,6 +137,7 @@ export default {
         this.userName = data.name;
         this.isLogin = data.login;
         this.$refs.login.$emit('close');
+        this.$refs.register.$emit('close');
         if (data.login) {
           this.roomSock.emit('get_all_rooms');
         }
@@ -146,14 +149,12 @@ export default {
       this.$refs.login.$emit('open');
     },
     submitLogin(id, password) {
-      this.isAuthResponce = false;
       this.isAuthListening = true;
       this.authSock.emit('login', { id, password });
       setTimeout(() => {
         if (this.isAuthListening) {
           this.isAuthListening = false;
-          this.isLogin = false;
-          this.$refs.login.$emit('close');
+          this.$refs.login.$emit('stop');
         }
       }, 10000);
     },
@@ -161,7 +162,6 @@ export default {
       this.$refs.register.$emit('open');
     },
     submitRegister(name, id, password, email) {
-      this.isAuthResponce = false;
       this.isAuthListening = true;
       this.authSock.emit('register', {
         name, id, password, email,
@@ -169,12 +169,11 @@ export default {
       setTimeout(() => {
         if (this.isAuthListening) {
           this.isAuthListening = false;
-          this.isLogin = false;
+          this.$refs.register.$emit('stop');
         }
       }, 10000);
     },
     logout() {
-      this.isAuthResponce = false;
       this.isAuthListening = true;
       this.authSock.emit('logout');
       setTimeout(() => {
@@ -223,7 +222,6 @@ export default {
       userName: '',
       tabModel: 'home',
       debug: 'none',
-      isAuthResponce: false,
       isAuthListening: true,
     };
   },
