@@ -73,6 +73,12 @@
   border-radius: 5px;
   background: var(--v-primary-base);
 }
+body{
+  scrollbar-width: none;
+}
+body::-webkit-scrollbar{
+  display:none;
+}
 </style>
 <script>
 import io from 'socket.io-client';
