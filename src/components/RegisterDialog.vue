@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog">
+  <v-dialog v-model="dialog" persistent>
     <v-card>
       <v-card-title>参加する（招待されたメールアドレスのみ）</v-card-title>
       <v-card-text>
@@ -13,8 +13,9 @@
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           label="パスワード" v-model="password" @keyup.enter="submit"/>
         </v-form>
+        <v-progress-linear v-if="registing" indeterminate />
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="!registing">
         <v-btn class="info" @click="submit" type="submit">登録</v-btn>
         <v-btn @click="dialog = false">閉じる</v-btn>
       </v-card-actions>
@@ -27,13 +28,21 @@ export default {
   name: 'LoginDialog',
   created() {
     this.$on('open', () => {
+      this.registing = false;
       this.dialog = true;
+    });
+    this.$on('stop', () => {
+      this.registing = false;
+    });
+    this.$on('close', () => {
+      this.registing = false;
+      this.dialog = false;
     });
   },
   methods: {
     submit() {
+      this.registing = true;
       this.$emit('done', this.name, this.id, this.password, this.email);
-      this.dialog = false;
     },
   },
   data() {
@@ -44,6 +53,7 @@ export default {
       id: '',
       password: '',
       email: '',
+      registing: false,
     };
   },
 };

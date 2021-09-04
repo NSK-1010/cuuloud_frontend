@@ -28,6 +28,9 @@ export default {
       this.logining = false;
       this.dialog = true;
     });
+    this.$on('stop', () => {
+      this.logining = false;
+    });
     this.$on('close', () => {
       this.logining = false;
       this.dialog = false;
