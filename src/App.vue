@@ -27,7 +27,7 @@
       <v-btn text v-if="isLogin" @click="logout">
         <v-icon>mdi-logout</v-icon>
       </v-btn>
-      <v-avatar v-if="isLogin" style="margin-left: auto;" color="teal" size="48">
+      <v-avatar v-if="isLogin" style="margin-left: auto;" color="secondary" size="48">
         <span class="white--text text-h5">{{ userName.substr(0,2) }}</span>
       </v-avatar>
       <template v-slot:extension v-if="isLogin">
@@ -70,8 +70,8 @@
 }
 
 .scrollbar::-webkit-scrollbar-thumb {
-border-radius: 5px;
-background: #00b4ff;
+  border-radius: 5px;
+  background: --v-primary-base;
 }
 </style>
 <script>
