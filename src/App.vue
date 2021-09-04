@@ -28,14 +28,14 @@
         <v-icon>mdi-logout</v-icon>
       </v-btn>
       <v-avatar v-if="isLogin" style="margin-left: auto;" color="teal" size="48">
-        <span class="white--text text-h5">{{ userName }}</span>
+        <span class="white--text text-h5">{{ userName.substr(0,2) }}</span>
       </v-avatar>
       <template v-slot:extension v-if="isLogin">
         <v-tabs v-model="tabModel">
           <v-tab href="#home">Home</v-tab>
           <v-tab v-for="room in joinnedRooms"
           :key="room.id" :href="'#'+room.id">
-            {{ room.name.substr(0,2) }}
+            {{ room.name }}
           </v-tab>
         </v-tabs>
       </template>
