@@ -119,6 +119,9 @@ export default {
     this.authSock.on('notice', (data) => {
       this.$refs.notice.$emit('open', data.message);
     });
+    this.roomSock.on('notice', (data) => {
+      this.$refs.notice.$emit('open', data.message);
+    });
     this.authSock.on('login_error', (data) => {
       this.$refs.notice.$emit('open', data.message);
       this.$refs.login.$emit('stop');
