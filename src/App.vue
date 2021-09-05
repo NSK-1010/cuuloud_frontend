@@ -15,21 +15,8 @@
           width="40"
         />
       </div>
-      <v-btn text v-if="!isLogin" @click="login">
-        <v-icon>mdi-login</v-icon>
-      </v-btn>
-      <v-btn text v-if="!isLogin" @click="register">
-        <v-icon>mdi-account-plus</v-icon>
-      </v-btn>
-      <v-btn icon v-if="isLogin" @click="invite">
-        <v-icon>mdi-account-multiple-plus</v-icon>
-      </v-btn>
-      <v-btn text v-if="isLogin" @click="logout">
-        <v-icon>mdi-logout</v-icon>
-      </v-btn>
-      <v-avatar v-if="isLogin" style="margin-left: auto;" color="secondary" size="48">
-        <span class="white--text text-h5">{{ userName.substr(0,2) }}</span>
-      </v-avatar>
+      <TopBarWidgets style="margin-left: auto;" :isLogin="isLogin" :name="userName"
+      @login="login" @register="register" @invite="invite" @logout="logout"/>
       <template v-slot:extension v-if="isLogin">
         <v-tabs v-model="tabModel">
           <v-tab href="#home">Home</v-tab>
@@ -89,6 +76,7 @@ import LoginDialog from './components/LoginDialog.vue';
 import InviteDialog from './components/InviteDialog.vue';
 import NoticeDialog from './components/NoticeDialog.vue';
 import ChatObject from './components/ChatObject.vue';
+import TopBarWidgets from './components/TopBarWidgets.vue';
 
 export default {
   name: 'App',
@@ -101,6 +89,7 @@ export default {
     CreateRoomDialog,
     InviteDialog,
     NoticeDialog,
+    TopBarWidgets,
   },
   mounted() {
     this.roomSock.on('rooms', (data) => {
