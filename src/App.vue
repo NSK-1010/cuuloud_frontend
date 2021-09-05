@@ -104,12 +104,12 @@ export default {
       }
       const obj = data;
       obj.type = 'join';
-      this.refs[data.room_id][0].$emit('recieve', obj);
+      this.$refs[data.room_id][0].$emit('recieve', obj);
     });
     this.roomSock.on('leave', (data) => {
       const obj = data;
       obj.type = 'leave';
-      this.refs[data.room_id][0].$emit('recieve', obj);
+      this.$refs[data.room_id][0].$emit('recieve', obj);
     });
     this.roomSock.on('message', (data) => {
       const obj = data;
