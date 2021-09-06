@@ -150,10 +150,11 @@ export default {
       this.authSock.emit('login', { id, password });
       setTimeout(() => {
         if (this.isAuthListening) {
+          this.$refs.notice.$emit('open', '接続がタイムアウトしました。この操作を再試行するか、ページを読み込みなおしてください。');
           this.isAuthListening = false;
           this.$refs.login.$emit('stop');
         }
-      }, 10000);
+      }, 20000);
     },
     register() {
       this.$refs.register.$emit('open');
@@ -165,19 +166,21 @@ export default {
       });
       setTimeout(() => {
         if (this.isAuthListening) {
+          this.$refs.notice.$emit('open', '接続がタイムアウトしました。この操作を再試行するか、ページを読み込みなおしてください。');
           this.isAuthListening = false;
           this.$refs.register.$emit('stop');
         }
-      }, 10000);
+      }, 20000);
     },
     logout() {
       this.isAuthListening = true;
       this.authSock.emit('logout');
       setTimeout(() => {
         if (this.isAuthListening) {
+          this.$refs.notice.$emit('open', '接続がタイムアウトしました。この操作を再試行するか、ページを読み込みなおしてください。');
           this.isAuthListening = false;
         }
-      }, 10000);
+      }, 20000);
     },
     createRoom() {
       this.$refs.createRoom.$emit('open');
