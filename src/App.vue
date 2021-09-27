@@ -122,7 +122,7 @@ export default {
     this.roomSock.on('notice', (data) => {
       this.$refs.notice.$emit('open', data.message);
     });
-    this.authSock.on('login_error', (data) => {
+    this.authSock.on('auth_error', (data) => {
       if (this.isAuthListening) {
         this.isAuthListening = false;
         this.$refs.notice.$emit('open', data.message);
