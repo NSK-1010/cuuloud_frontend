@@ -123,9 +123,12 @@ export default {
       this.$refs.notice.$emit('open', data.message);
     });
     this.authSock.on('login_error', (data) => {
-      this.$refs.notice.$emit('open', data.message);
-      this.$refs.login.$emit('stop');
-      this.$refs.register.$emit('stop');
+      if (this.isAuthListening) {
+        this.isAuthListening = false;
+        this.$refs.notice.$emit('open', data.message);
+        this.$refs.login.$emit('stop');
+        this.$refs.register.$emit('stop');
+      }
     });
     this.authSock.on('login', (data) => {
       if (this.isAuthListening) {
@@ -215,8 +218,8 @@ export default {
     return {
       id: '',
       domain: '',
-      authSock: io.connect('localhost:5000/auth'),
-      roomSock: io.connect('localhost:5000/room'),
+      authSock: io.connect('/auth'),
+      roomSock: io.connect('/room'),
       isLogin: false,
       joinnedRooms: [],
       userName: '',
