@@ -43,6 +43,7 @@
       <CreateRoomDialog ref="createRoom" @done="submitCreateRoom" />
       <InviteDialog ref="invite" @done="submitInvite"/>
       <NoticeDialog ref="notice" />
+      <Welcome v-if="!isLogin"/>
     </v-main>
   </v-app>
 </template>
@@ -77,6 +78,7 @@ import InviteDialog from './components/InviteDialog.vue';
 import NoticeDialog from './components/NoticeDialog.vue';
 import ChatObject from './components/ChatObject.vue';
 import TopBarWidgets from './components/TopBarWidgets.vue';
+import Welcome from './components/Welcome.vue';
 
 export default {
   name: 'App',
@@ -90,6 +92,7 @@ export default {
     InviteDialog,
     NoticeDialog,
     TopBarWidgets,
+    Welcome,
   },
   mounted() {
     this.roomSock.on('rooms', (data) => {
