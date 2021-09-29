@@ -9,26 +9,30 @@
     outlined
     v-for="chat in chatlog" :key="chat.created_at">
       <v-card-text>
-        <v-card-text class="text-h6" v-if="chat.type === 'message'">
-          {{ chat.text }}
-        </v-card-text>
         <v-card-text class="text-h6" v-if="chat.type === 'join'">
           {{ chat.user_name }} が参加しました
         </v-card-text>
         <v-card-text class="text-h6" v-if="chat.type === 'leave'">
           {{ chat.user_name }} が退出しました
         </v-card-text>
-        <v-list-item class="grow" v-if="chat.type === 'message'">
-          <v-list-item-avatar color="secondary" size="48">
+        <div class="d-flex flex-row" v-if="chat.type === 'message'">
+          <v-avatar color="secondary" size="48">
               <span class="white--text text-h5">{{ chat.user_name.substr(0,2) }}</span>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title class="text-h7">{{ chat.user_name }}</v-list-item-title>
-          </v-list-item-content>
-          <v-row align="center" justify="end">
-            <span class="subheading mr-2 text-h7">{{ showDate(chat.created_at) }}</span>
-          </v-row>
-        </v-list-item>
+          </v-avatar>
+          <div style="width: 100%;">
+            <p class="text-h6 px-4 text-justify">
+              {{ chat.text }}
+            </p>
+            <v-list-item class="grow">
+              <v-list-item-content justify="start">
+                <v-list-item-title class="text-h7">{{ chat.user_name }}</v-list-item-title>
+              </v-list-item-content>
+              <v-row align="center" justify="end">
+                <span class="subheading mr-2 text-h7">{{ showDate(chat.created_at) }}</span>
+              </v-row>
+            </v-list-item>
+          </div>
+        </div>
       </v-card-text>
     </v-card>
   </div>
