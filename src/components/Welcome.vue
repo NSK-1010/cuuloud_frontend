@@ -2,7 +2,8 @@
   <div class="py-auto my-16">
     <div>
       <p class="font-weight-light text-center text-h2">
-        Cuuloudへようこそ。
+        ようこそ、<br>
+        Cuuloudへ。
       </p>
       <p class="my-8 font-weight-regular text-center">
         ここは、今だけの話題でゆったりと話すことができる場所です。<br>
