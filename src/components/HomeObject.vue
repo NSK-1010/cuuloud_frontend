@@ -17,7 +17,7 @@
       <v-card-title>{{ room.name }}</v-card-title>
       <v-card-actions>
         <v-btn icon @click="join(room.id)">
-          <v-icon>mdi-logout-variant</v-icon>
+          <v-icon>mdi-login-variant</v-icon>
         </v-btn>
       </v-card-actions>
     </v-card>
