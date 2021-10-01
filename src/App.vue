@@ -15,7 +15,8 @@
           width="40"
         />
       </div>
-      <TopBarWidgets style="margin-left: auto;" :isLogin="isLogin" :name="userName"
+      <TopBarWidgets class="ml-auto"
+      :disconnected="disconnected" :isLogin="isLogin" :name="userName"
       @login="login" @register="register" @invite="invite" @logout="logout"/>
       <template v-slot:extension v-if="isLogin">
         <v-tabs v-model="tabModel">
@@ -44,6 +45,7 @@
       <InviteDialog ref="invite" @done="submitInvite"/>
       <NoticeDialog ref="notice" />
       <Welcome v-if="!isLogin"/>
+      <v-snackbar v-model="disconnected">サーバーとの接続が切断されました。</v-snackbar>
     </v-main>
   </v-app>
 </template>
@@ -230,6 +232,11 @@ export default {
       debug: 'none',
       isAuthListening: true,
     };
+  },
+  computed: {
+    disconnected() {
+      return !(this.authSock.connected && this.roomSock.connected);
+    },
   },
 };
 </script>
