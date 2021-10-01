@@ -31,12 +31,13 @@
     <v-main>
       <v-tabs-items v-model="tabModel" v-if="isLogin">
         <v-tab-item value="home">
-          <HomeObject ref="homeObj" @join="join" @create="submitCreateRoom"/>
+          <HomeObject :disconnected="disconnected"
+          ref="homeObj" @join="join" @create="submitCreateRoom"/>
         </v-tab-item>
         <v-tab-item v-for="room in joinnedRooms"
         :key="room.id" :value="room.id">
-          <ChatObject @send="sendMessage" @leave="leave" :ref="room.id"
-          :name="room.name" :roomId="room.id">
+          <ChatObject @send="sendMessage" @leave="leave"
+          :ref="room.id" :disconnected="disconnected" :name="room.name" :roomId="room.id">
         </v-tab-item>
       </v-tabs-items>
       <LoginDialog ref="login" @done="submitLogin" />

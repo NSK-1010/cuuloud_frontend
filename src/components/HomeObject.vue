@@ -6,11 +6,12 @@
       <v-card-title>部屋を作成する</v-card-title>
       <v-card-text>
         <v-form @submit.prevent>
-          <v-text-field label="部屋の名前" v-model="roomName" @keyup.enter="createRoom"/>
+          <v-text-field :disabled="disconnected"
+          label="部屋の名前" v-model="roomName" @keyup.enter="createRoom"/>
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn class="info" @click="createRoom">作成</v-btn>
+        <v-btn :disabled="disconnected" class="info" @click="createRoom">作成</v-btn>
       </v-card-actions>
     </v-card>
     <v-card class="ma-4" elevation="7" shaped v-for="room in rooms" :key="room.created_at">
@@ -19,7 +20,7 @@
       <v-card-actions>
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on" icon @click="join(room.id)">
+            <v-btn :disabled="disconnected" v-bind="attrs" v-on="on" icon @click="join(room.id)">
               <v-icon>mdi-login-variant</v-icon>
             </v-btn>
           </template>
@@ -32,6 +33,7 @@
 <script>
 export default {
   name: 'HomeObject',
+  props: ['disconnected'],
   created() {
     this.$on('update', (data) => {
       this.rooms = data;

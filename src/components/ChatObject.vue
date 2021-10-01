@@ -42,7 +42,7 @@
         <v-card-actions>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
-              <v-btn v-bind="attrs" v-on="on" icon @click="leave">
+              <v-btn v-bind="attrs" v-on="on" icon @click="leave" :disabled="disconnected">
                 <v-icon>mdi-logout-variant</v-icon>
               </v-btn>
             </template>
@@ -55,7 +55,8 @@
         </v-card-actions>
     </v-card>
     <v-card-actions>
-      <v-text-field height="48" outlined v-model="text" append-outer-icon="mdi-send"
+      <v-text-field :disabled="disconnected"
+      height="48" outlined v-model="text" append-outer-icon="mdi-send"
       @keyup.enter="send" @click:append-outer="send" />
     </v-card-actions>
   </v-card>
@@ -66,7 +67,7 @@
 <script>
 export default {
   name: 'ChatObject',
-  props: ['name', 'roomId'],
+  props: ['name', 'roomId', 'disconnected'],
   mounted() {
     this.$on('recieve', (data) => {
       const messagesArea = document.getElementById(`msarea-${this.roomId}`);
