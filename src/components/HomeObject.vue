@@ -2,7 +2,7 @@
   <div class="scrollbar" style="
   overflow: auto;
   height: calc(100vh - 112px);">
-    <v-card style="margin:10px;" elevation="7" shaped>
+    <v-card class="ma-4" elevation="7" shaped>
       <v-card-title>部屋を作成する</v-card-title>
       <v-card-text>
         <v-form @submit.prevent>
@@ -13,12 +13,18 @@
         <v-btn class="info" @click="createRoom">作成</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card style="margin:10px;" elevation="7" shaped v-for="room in rooms" :key="room.created_at">
-      <v-card-title>{{ room.name }}</v-card-title>
+    <v-card class="ma-4" elevation="7" shaped v-for="room in rooms" :key="room.created_at">
+      <v-card-title class="pb-0">{{ room.name }}</v-card-title>
+      <v-card-text class="caption">{{ room.host_name }}が作成した部屋</v-card-text>
       <v-card-actions>
-        <v-btn icon @click="join(room.id)">
-          <v-icon>mdi-login-variant</v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn v-bind="attrs" v-on="on" icon @click="join(room.id)">
+              <v-icon>mdi-login-variant</v-icon>
+            </v-btn>
+          </template>
+        <span>参加する</span>
+        </v-tooltip>
       </v-card-actions>
     </v-card>
   </div>
