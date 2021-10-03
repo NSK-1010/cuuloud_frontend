@@ -12,6 +12,7 @@ yarn build
 ## How to run
 ```
 cd cuuloud_backend
+sudo apt-get install libpcre3 libpcre3-dev
 pip install -r requirements.txt
 flask db migrate
 flask db upgrade
