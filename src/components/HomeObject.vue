@@ -20,7 +20,7 @@
         <v-tooltip bottom>
           @{{ room.host_id }}
           <template v-slot:activator="{ on, attrs }">
-            <p class="caption" v-bind="attrs" v-on="on">{{ room.host_name }}</p>
+            <span class="caption" v-bind="attrs" v-on="on">{{ room.host_name }}</span>
           </template>
         </v-tooltip>
         が作成した部屋
