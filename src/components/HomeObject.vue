@@ -16,7 +16,15 @@
     </v-card>
     <v-card class="ma-4" elevation="7" shaped v-for="room in rooms" :key="room.created_at">
       <v-card-title class="pb-0">{{ room.name }}</v-card-title>
-      <v-card-text class="caption">{{ room.host_name }}が作成した部屋</v-card-text>
+      <v-card-text class="caption">
+        <v-tooltip bottom>
+          @{{ room.host_id }}
+          <template v-slot:activator="{ on, attrs }">
+            <p class="caption" v-bind="attrs" v-on="on">{{ room.host_name }}</p>
+          </template>
+        </v-tooltip>
+        が作成した部屋
+      </v-card-text>
       <v-card-actions>
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">

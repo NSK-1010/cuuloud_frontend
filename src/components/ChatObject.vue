@@ -23,7 +23,7 @@
             <v-list-item class="grow">
               <v-list-item-content>
                 <v-list-item-title class="text-body2 py-0">{{ chat.user_name }}</v-list-item-title>
-                <span class="text-caption">{{ chat.user_id }}</span>
+                <span class="text-caption">@{{ chat.user_id }}</span>
               </v-list-item-content>
               <v-row align="center" justify="end">
                 <span class="subheading mr-2">{{ showDate(chat.created_at) }}</span>
