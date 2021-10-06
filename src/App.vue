@@ -47,6 +47,7 @@
       <NoticeDialog ref="notice" />
       <Welcome v-if="!isLogin"/>
       <v-snackbar v-model="disconnected">サーバーとの接続が切断されました。</v-snackbar>
+      <v-snackbar v-model="connected" timeout="1000">サーバーに接続されました。</v-snackbar>
     </v-main>
   </v-app>
 </template>
@@ -149,6 +150,7 @@ export default {
         }
       }
     });
+    setTimeout(() => { this.ready = true; }, 1000);
   },
   methods: {
     login() {
@@ -232,11 +234,15 @@ export default {
       tabModel: 'home',
       debug: 'none',
       isAuthListening: true,
+      ready: false,
     };
   },
   computed: {
     disconnected() {
-      return !(this.authSock.connected && this.roomSock.connected);
+      return this.ready && !(this.authSock.connected && this.roomSock.connected);
+    },
+    connected() {
+      return this.ready && this.authSock.connected && this.roomSock.connected;
     },
   },
 };
