@@ -4,8 +4,10 @@
       <v-card-title>参加する（招待されたメールアドレスのみ）</v-card-title>
       <v-card-text>
         <v-form>
-          <v-text-field label="ニックネーム" v-model="name" type="text" autocomplete="nickname" />
-          <v-text-field label="ユーザーID" v-model="id" type="text" autocomplete="username" />
+          <v-text-field label="ニックネーム"
+          counter="10" v-model="name" type="text" autocomplete="nickname" />
+          <v-text-field label="ユーザーID"
+          counter="15" v-model="id" type="text" autocomplete="username" />
           <v-text-field label="メールアドレス" type="email" autocomplete="email" v-model="email" />
           <v-text-field
           @click:append="showPassword = !showPassword"
