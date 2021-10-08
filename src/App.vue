@@ -75,7 +75,6 @@ body::-webkit-scrollbar{
 <script>
 import io from 'socket.io-client';
 import HomeObject from './components/HomeObject.vue';
-import CreateRoomDialog from './components/CreateRoomDialog.vue';
 import RegisterDialog from './components/RegisterDialog.vue';
 import LoginDialog from './components/LoginDialog.vue';
 import InviteDialog from './components/InviteDialog.vue';
@@ -91,7 +90,6 @@ export default {
     ChatObject,
     LoginDialog,
     RegisterDialog,
-    CreateRoomDialog,
     InviteDialog,
     NoticeDialog,
     TopBarWidgets,
