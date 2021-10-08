@@ -1,48 +1,62 @@
 <template>
   <div class="d-flex">
     <div v-if="!isLogin">
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn :disabled="disconnected" v-bind="attrs" v-on="on" icon @click="$emit('login')">
-            <v-icon>mdi-login</v-icon>
-          </v-btn>
-        </template>
-        <span>ログイン</span>
-      </v-tooltip>
+      <Tooltip text="ログイン">
+        <v-btn :disabled="disconnected" icon @click="$emit('login')">
+          <v-icon>mdi-login</v-icon>
+        </v-btn>
+      </Tooltip>
     </div>
     <div v-if="!isLogin">
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn :disabled="disconnected" v-bind="attrs" v-on="on" icon @click="$emit('register')">
-            <v-icon>mdi-account-plus</v-icon>
-          </v-btn>
-        </template>
-        <span>登録</span>
-      </v-tooltip>
+      <Tooltip text="登録">
+        <v-btn :disabled="disconnected" v-bind="attrs" v-on="on" icon @click="$emit('register')">
+          <v-icon>mdi-account-plus</v-icon>
+        </v-btn>
+      </Tooltip>
     </div>
     <div v-if="isLogin">
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn :disabled="disconnected" v-bind="attrs" v-on="on" icon @click="$emit('invite')">
-            <v-icon>mdi-account-multiple-plus</v-icon>
-          </v-btn>
-        </template>
-        <span>招待</span>
-      </v-tooltip>
+      <Tooltip text="招待">
+        <v-btn :disabled="disconnected" icon @click="$emit('invite')">
+          <v-icon>mdi-account-multiple-plus</v-icon>
+        </v-btn>
+      </Tooltip>
     </div>
     <div v-if="isLogin">
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn :disabled="disconnected" v-bind="attrs" v-on="on" icon @click="$emit('logout')">
-            <v-icon>mdi-logout</v-icon>
-          </v-btn>
-        </template>
-        <span>ログアウト</span>
-      </v-tooltip>
+      <Tooltip text="ログアウト">
+        <v-btn :disabled="disconnected" v-bind="attrs" v-on="on" icon @click="$emit('logout')">
+          <v-icon>mdi-logout</v-icon>
+        </v-btn>
+      </Tooltip>
     </div>
-    <v-avatar v-if="isLogin" color="secondary" size="48">
-      <span class="white--text text-h5">{{ name.substr(0,2) }}</span>
-    </v-avatar>
+    <v-menu bottom offset-y v-if="isLogin">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn icon>
+          <Tooltip :text="name">
+            <v-avatar v-bind="attrs" v-on="on" color="secondary" size="48">
+              <span class="white--text text-h5">{{ name.substr(0,2) }}</span>
+            </v-avatar>
+          </Tooltip>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item link>
+          <v-list-item-icon>
+            <v-icon>mdi-account</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            プロフィール(Coming Soon...)
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item link>
+          <v-list-item-icon>
+            <v-icon>mdi-cog</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            設定(Coming Soon...)
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </div>
 </template>
 <style scoped>
@@ -51,8 +65,13 @@
 }
 </style>
 <script>
+import Tooltip from './Tooltip.vue';
+
 export default {
   name: 'TopBarWidgets',
+  components: {
+    Tooltip,
+  },
   props: ['name', 'isLogin', 'disconnected'],
   data() {
     return {
