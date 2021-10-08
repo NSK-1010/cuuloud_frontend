@@ -40,8 +40,8 @@
           :ref="room.id" :disconnected="disconnected" :name="room.name" :roomId="room.id">
         </v-tab-item>
       </v-tabs-items>
-      <LoginDialog ref="login" @done="submitLogin" />
-      <RegisterDialog ref="register" @done="submitRegister" />
+      <LoginDialog ref="login" :disconnected="disconnected" @done="submitLogin" />
+      <RegisterDialog ref="register" :disconnected="disconnected" @done="submitRegister" />
       <CreateRoomDialog ref="createRoom" @done="submitCreateRoom" />
       <InviteDialog ref="invite" @done="submitInvite"/>
       <NoticeDialog ref="notice" />
@@ -86,7 +86,6 @@ import Welcome from './components/Welcome.vue';
 
 export default {
   name: 'App',
-
   components: {
     HomeObject,
     ChatObject,
