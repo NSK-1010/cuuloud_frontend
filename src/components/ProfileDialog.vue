@@ -10,13 +10,13 @@
             <span class="white--text text-h5">{{ name.substr(0,2) }}</span>
           </v-avatar>
           <div>
-            <span class="ml-3 mb-0 ">{{ name }}</span>
-            <span class="ml-3 caption">@{{ id }}</span>
+            <p class="ml-3 mb-0 ">{{ name }}</p>
+            <p class="ml-3 caption">@{{ id }}</p>
           </div>
         </v-card-title>
       </v-img>
       <v-card-text>
-        参加した部屋
+        <p class="ml-4 mt-4">参加した部屋</p>
         <RoomObject v-for="room in rooms" :key="room.created_at"
         :room="room" :disconnected="disconnected" @join="(id) => $emit('join',id)"/>
       </v-card-text>
