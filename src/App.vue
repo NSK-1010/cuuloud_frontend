@@ -42,11 +42,12 @@
       </v-tabs-items>
       <LoginDialog ref="login" :disconnected="disconnected" @done="submitLogin" />
       <RegisterDialog ref="register" :disconnected="disconnected" @done="submitRegister" />
-      <CreateRoomDialog ref="createRoom" @done="submitCreateRoom" />
       <InviteDialog ref="invite" @done="submitInvite"/>
       <NoticeDialog ref="notice" />
       <ProfileDialog v-for="profile in profiles" :key="profile.id" :profile="profile"
       @close="closeProfile" @join="submitJoin"/>
+      <SettingsDialog ref="settings" :name="userName" :disconnected="disconnected"
+      @apply="applySettings">
       <Welcome v-if="!isLogin"/>
       <v-snackbar v-model="disconnected">サーバーとの接続が切断されました。</v-snackbar>
       <v-snackbar v-model="connected" timeout="1000">サーバーに接続されました。</v-snackbar>
@@ -82,6 +83,7 @@ import LoginDialog from './components/LoginDialog.vue';
 import InviteDialog from './components/InviteDialog.vue';
 import NoticeDialog from './components/NoticeDialog.vue';
 import ProfileDialog from './components/ProfileDialog.vue';
+import SettingsDialog from './components/SettingsDialog.vue';
 import ChatObject from './components/ChatObject.vue';
 import TopBarWidgets from './components/TopBarWidgets.vue';
 import Welcome from './components/Welcome.vue';
@@ -96,6 +98,7 @@ export default {
     InviteDialog,
     NoticeDialog,
     ProfileDialog,
+    SettingsDialog,
     TopBarWidgets,
     Welcome,
   },
@@ -129,6 +132,9 @@ export default {
     });
     this.roomSock.on('notice', (data) => {
       this.$refs.notice.$emit('open', data.message);
+    });
+    this.roomSock.on('changed_settings', (data) => {
+      this.userName = data.name;
     });
     this.authSock.on('auth_error', (data) => {
       if (this.isAuthListening) {
@@ -203,14 +209,13 @@ export default {
     submitJoin(room) {
       this.roomSock.emit('join_room', { room });
     },
-    error() {
-
+    applySettings(obj) {
+      this.authSock.emit('apply_settings', obj);
+      this.userName = obj.name;
+      this.$refs.settings.$emit('close');
     },
     leave(roomId) {
       this.roomSock.emit('leave_room', { room: roomId });
-    },
-    send() {
-
     },
     submitInvite(email) {
       this.authSock.emit('invite', { email });

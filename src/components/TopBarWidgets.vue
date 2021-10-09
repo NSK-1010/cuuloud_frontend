@@ -55,7 +55,7 @@
             <v-icon>mdi-cog</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            設定(Coming Soon...)
+            設定
           </v-list-item-content>
         </v-list-item>
       </v-list>
