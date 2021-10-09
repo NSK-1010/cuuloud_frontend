@@ -19,7 +19,7 @@
           <v-avatar color="secondary" size="48">
               <span class="white--text text-h5">{{ chat.user_name.substr(0,2) }}</span>
           </v-avatar>
-          <div style="width: 100%;">
+          <div style="width: calc(100% - 48px);">
             <v-list-item class="grow">
               <v-list-item-content>
                 <v-list-item-title class="text-body2 py-0">{{ chat.user_name }}</v-list-item-title>
