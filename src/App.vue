@@ -49,7 +49,7 @@
       :key="profile.id" :profile="profile" :disconnected="disconnected"
       @close="closeProfile" @join="submitJoin"/>
       <SettingsDialog ref="settings" :name="userName" :disconnected="disconnected"
-      @apply="applySettings">
+      @apply="applySettings"/>
       <v-snackbar v-model="disconnected">サーバーとの接続が切断されました。</v-snackbar>
       <v-snackbar v-model="connected" timeout="1000">サーバーに接続されました。</v-snackbar>
     </v-main>
