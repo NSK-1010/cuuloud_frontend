@@ -38,7 +38,7 @@
         <v-tab-item v-for="room in joinnedRooms"
         :key="room.id" :value="room.id">
           <ChatObject @send="sendMessage" @leave="leave"
-          :ref="room.id" :disconnected="disconnected" :name="room.name" :roomId="room.id">
+          :ref="room.id" :disconnected="disconnected" :name="room.name" :roomId="room.id"/>
         </v-tab-item>
       </v-tabs-items>
       <LoginDialog ref="login" :disconnected="disconnected" @done="submitLogin" />
