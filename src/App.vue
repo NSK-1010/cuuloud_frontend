@@ -44,7 +44,8 @@
       <RegisterDialog ref="register" :disconnected="disconnected" @done="submitRegister" />
       <InviteDialog ref="invite" @done="submitInvite"/>
       <NoticeDialog ref="notice" />
-      <ProfileDialog v-for="profile in profiles" :key="profile.id" :profile="profile"
+      <ProfileDialog v-for="profile in profiles"
+      :key="profile.id" :profile="profile" :disconnected="disconnected"
       @close="closeProfile" @join="submitJoin"/>
       <SettingsDialog ref="settings" :name="userName" :disconnected="disconnected"
       @apply="applySettings">
