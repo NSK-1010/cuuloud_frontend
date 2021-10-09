@@ -12,7 +12,7 @@
         </v-list-item>
       </v-list>
       <v-card-actions>
-        <v-btn @click="apply" text class="info">適用</v-btn>
+        <v-btn @click="apply" :disabled="disconnected" text class="info">適用</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
