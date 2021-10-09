@@ -17,7 +17,7 @@
       </div>
       <TopBarWidgets class="ml-auto"
       :disconnected="disconnected" :isLogin="isLogin" :name="userName"
-      @login="login" @register="register" @invite="invite" @logout="logout"/>
+      @logout="logout" @profile="openProfile(myProfile)" @open="openDialog"/>
       <template v-slot:extension v-if="isLogin">
         <v-tabs v-model="tabModel">
           <v-tab href="#home">Home</v-tab>
@@ -32,7 +32,7 @@
       <v-tabs-items v-model="tabModel" v-if="isLogin">
         <v-tab-item value="home">
           <HomeObject :disconnected="disconnected"
-          ref="homeObj" @join="join" @create="submitCreateRoom"/>
+          ref="homeObj" @join="submitJoin" @create="submitCreateRoom"/>
         </v-tab-item>
         <v-tab-item v-for="room in joinnedRooms"
         :key="room.id" :value="room.id">
@@ -42,9 +42,13 @@
       </v-tabs-items>
       <LoginDialog ref="login" :disconnected="disconnected" @done="submitLogin" />
       <RegisterDialog ref="register" :disconnected="disconnected" @done="submitRegister" />
-      <CreateRoomDialog ref="createRoom" @done="submitCreateRoom" />
       <InviteDialog ref="invite" @done="submitInvite"/>
       <NoticeDialog ref="notice" />
+      <ProfileDialog v-for="profile in profiles"
+      :key="profile.id" :profile="profile" :disconnected="disconnected"
+      @close="closeProfile" @join="submitJoin"/>
+      <SettingsDialog ref="settings" :name="userName" :disconnected="disconnected"
+      @apply="applySettings">
       <Welcome v-if="!isLogin"/>
       <v-snackbar v-model="disconnected">サーバーとの接続が切断されました。</v-snackbar>
       <v-snackbar v-model="connected" timeout="1000">サーバーに接続されました。</v-snackbar>
@@ -79,6 +83,8 @@ import RegisterDialog from './components/RegisterDialog.vue';
 import LoginDialog from './components/LoginDialog.vue';
 import InviteDialog from './components/InviteDialog.vue';
 import NoticeDialog from './components/NoticeDialog.vue';
+import ProfileDialog from './components/ProfileDialog.vue';
+import SettingsDialog from './components/SettingsDialog.vue';
 import ChatObject from './components/ChatObject.vue';
 import TopBarWidgets from './components/TopBarWidgets.vue';
 import Welcome from './components/Welcome.vue';
@@ -92,6 +98,8 @@ export default {
     RegisterDialog,
     InviteDialog,
     NoticeDialog,
+    ProfileDialog,
+    SettingsDialog,
     TopBarWidgets,
     Welcome,
   },
@@ -126,6 +134,9 @@ export default {
     this.roomSock.on('notice', (data) => {
       this.$refs.notice.$emit('open', data.message);
     });
+    this.authSock.on('changed_settings', (data) => {
+      this.userName = data.name;
+    });
     this.authSock.on('auth_error', (data) => {
       if (this.isAuthListening) {
         this.isAuthListening = false;
@@ -150,8 +161,14 @@ export default {
     setTimeout(() => { this.ready = true; }, 1000);
   },
   methods: {
-    login() {
-      this.$refs.login.$emit('open');
+    openProfile(obj) {
+      this.profiles.push(obj);
+    },
+    closeProfile(id) {
+      this.profiles = this.profiles.filter((obj) => obj.id !== id);
+    },
+    openDialog(name) {
+      this.$refs[name].$emit('open');
     },
     submitLogin(id, password) {
       this.isAuthListening = true;
@@ -163,9 +180,6 @@ export default {
           this.$refs.login.$emit('stop');
         }
       }, 20000);
-    },
-    register() {
-      this.$refs.register.$emit('open');
     },
     submitRegister(name, id, password, email) {
       this.isAuthListening = true;
@@ -190,26 +204,18 @@ export default {
         }
       }, 20000);
     },
-    createRoom() {
-      this.$refs.createRoom.$emit('open');
-    },
     submitCreateRoom(name) {
       this.roomSock.emit('create_room', { name });
     },
-    join(room) {
+    submitJoin(room) {
       this.roomSock.emit('join_room', { room });
     },
-    error() {
-
+    applySettings(obj) {
+      this.authSock.emit('apply_settings', obj);
+      this.$refs.settings.$emit('close');
     },
     leave(roomId) {
       this.roomSock.emit('leave_room', { room: roomId });
-    },
-    send() {
-
-    },
-    invite() {
-      this.$refs.invite.$emit('open');
     },
     submitInvite(email) {
       this.authSock.emit('invite', { email });
@@ -228,6 +234,7 @@ export default {
       isLogin: false,
       joinnedRooms: [],
       userName: '',
+      profiles: [],
       tabModel: 'home',
       debug: 'none',
       isAuthListening: true,
@@ -240,6 +247,9 @@ export default {
     },
     connected() {
       return this.ready && this.authSock.connected && this.roomSock.connected;
+    },
+    myProfile() {
+      return { name: this.userName, id: this.id, rooms: this.joinnedRooms };
     },
   },
 };
