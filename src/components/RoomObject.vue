@@ -7,7 +7,7 @@
     </v-card-text>
     <v-card-actions>
       <Tooltip text="参加する">
-        <v-btn :disabled="disconnected" icon @click="emit('join',room.id)">
+        <v-btn :disabled="disconnected" icon @click="$emit('join',room.id)">
           <v-icon>mdi-login-variant</v-icon>
         </v-btn>
       </Tooltip>
