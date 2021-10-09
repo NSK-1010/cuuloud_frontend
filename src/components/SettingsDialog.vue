@@ -40,5 +40,10 @@ export default {
       userName: '',
     };
   },
+  watch: {
+    name(name) {
+      this.userName = name;
+    },
+  },
 };
 </script>

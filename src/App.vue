@@ -133,7 +133,7 @@ export default {
     this.roomSock.on('notice', (data) => {
       this.$refs.notice.$emit('open', data.message);
     });
-    this.roomSock.on('changed_settings', (data) => {
+    this.authSock.on('changed_settings', (data) => {
       this.userName = data.name;
     });
     this.authSock.on('auth_error', (data) => {
@@ -211,7 +211,6 @@ export default {
     },
     applySettings(obj) {
       this.authSock.emit('apply_settings', obj);
-      this.userName = obj.name;
       this.$refs.settings.$emit('close');
     },
     leave(roomId) {
