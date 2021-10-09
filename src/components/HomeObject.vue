@@ -15,7 +15,7 @@
       </v-card-actions>
     </v-card>
     <RoomObject v-for="room in rooms" :key="room.created_at"
-    :room="room" @join="(id) => $emit('join',id)"/>
+    :room="room" :disconnected="disconnected" @join="(id) => $emit('join',id)"/>
   </div>
 </template>
 <script>

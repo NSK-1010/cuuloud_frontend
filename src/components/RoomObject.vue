@@ -19,7 +19,7 @@ import Tooltip from './Tooltip.vue';
 
 export default {
   name: 'RoomObject',
-  props: ['room'],
+  props: ['room', 'disconnected'],
   components: {
     Tooltip,
   },

@@ -1,6 +1,6 @@
 <template>
   <v-dialog @click:outside="close" @keydown:Escape="close" v-model="dialog" persistent >
-    <v-card>
+    <v-card scrollable max-height="80%">
       <v-img
           height="128px"
           src="https://cdn.pixabay.com/photo/2012/04/14/16/37/sky-34536_960_720.png"
@@ -18,7 +18,7 @@
       <v-card-text>
         参加した部屋
         <RoomObject v-for="room in rooms" :key="room.created_at"
-        :room="room" @join="(id) => $emit('join',id)"/>
+        :room="room" :disconnected="disconnected" @join="(id) => $emit('join',id)"/>
       </v-card-text>
     </v-card>
   </v-dialog>
