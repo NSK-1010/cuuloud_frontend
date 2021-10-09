@@ -2,21 +2,24 @@
   <div class="d-flex">
     <div v-if="!isLogin">
       <Tooltip text="ログイン">
-        <v-btn :disabled="disconnected" icon @click="$emit('login')">
+        <v-btn :disabled="disconnected" icon
+        @click="$emit('open', 'login')">
           <v-icon>mdi-login</v-icon>
         </v-btn>
       </Tooltip>
     </div>
     <div v-if="!isLogin">
       <Tooltip text="登録">
-        <v-btn :disabled="disconnected" v-bind="attrs" v-on="on" icon @click="$emit('register')">
+        <v-btn :disabled="disconnected" v-bind="attrs" v-on="on" icon
+        @click="$emit('open', 'register')">
           <v-icon>mdi-account-plus</v-icon>
         </v-btn>
       </Tooltip>
     </div>
     <div v-if="isLogin">
       <Tooltip text="招待">
-        <v-btn :disabled="disconnected" icon @click="$emit('invite')">
+        <v-btn :disabled="disconnected" icon
+        @click="$emit('open', 'invite')">
           <v-icon>mdi-account-multiple-plus</v-icon>
         </v-btn>
       </Tooltip>
@@ -39,15 +42,15 @@
         </v-btn>
       </template>
       <v-list>
-        <v-list-item link>
+        <v-list-item link @click="$emit('profile')">
           <v-list-item-icon>
             <v-icon>mdi-account</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            プロフィール(Coming Soon...)
+            プロフィール
           </v-list-item-content>
         </v-list-item>
-        <v-list-item link>
+        <v-list-item link @click="$emit('open', 'settings')">
           <v-list-item-icon>
             <v-icon>mdi-cog</v-icon>
           </v-list-item-icon>
