@@ -5,4 +5,10 @@ module.exports = {
   publicPath: '/',
   outputDir: '../dist/',
   assetsDir: 'static',
+  pages: {
+    index: {
+      entry: 'src/main.js',
+      title: 'タイトル',
+    },
+  },
 };

@@ -14,34 +14,19 @@
         <v-btn :disabled="disconnected" class="info" @click="createRoom">作成</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card class="ma-4" elevation="7" shaped v-for="room in rooms" :key="room.created_at">
-      <v-card-title class="pb-0">{{ room.name }}</v-card-title>
-      <v-card-text class="caption">
-        <v-tooltip bottom>
-          @{{ room.host_id }}
-          <template v-slot:activator="{ on, attrs }">
-            <span class="caption" v-bind="attrs" v-on="on">{{ room.host_name }}</span>
-          </template>
-        </v-tooltip>
-        が作成した部屋
-      </v-card-text>
-      <v-card-actions>
-        <v-tooltip top>
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn :disabled="disconnected" v-bind="attrs" v-on="on" icon @click="join(room.id)">
-              <v-icon>mdi-login-variant</v-icon>
-            </v-btn>
-          </template>
-        <span>参加する</span>
-        </v-tooltip>
-      </v-card-actions>
-    </v-card>
+    <RoomObject v-for="room in rooms" :key="room.created_at"
+    :room="room" :disconnected="disconnected" @join="(id) => $emit('join',id)"/>
   </div>
 </template>
 <script>
+import RoomObject from './RoomObject.vue';
+
 export default {
   name: 'HomeObject',
   props: ['disconnected'],
+  components: {
+    RoomObject,
+  },
   created() {
     this.$on('update', (data) => {
       this.rooms = data;
