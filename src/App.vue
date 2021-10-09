@@ -29,6 +29,7 @@
       </template>
     </v-app-bar>
     <v-main>
+      <Welcome v-if="!isLogin"/>
       <v-tabs-items v-model="tabModel" v-if="isLogin">
         <v-tab-item value="home">
           <HomeObject :disconnected="disconnected"
@@ -49,7 +50,6 @@
       @close="closeProfile" @join="submitJoin"/>
       <SettingsDialog ref="settings" :name="userName" :disconnected="disconnected"
       @apply="applySettings">
-      <Welcome v-if="!isLogin"/>
       <v-snackbar v-model="disconnected">サーバーとの接続が切断されました。</v-snackbar>
       <v-snackbar v-model="connected" timeout="1000">サーバーに接続されました。</v-snackbar>
     </v-main>
