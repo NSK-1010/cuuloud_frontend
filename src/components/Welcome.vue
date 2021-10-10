@@ -7,7 +7,7 @@
       </p>
       <p class="my-8 font-weight-regular text-center">
         ここは、今だけの話題でゆったりと話すことができる場所です。<br>
-        左上のボタンから、早速始めてみましょう！
+        右上のボタンから、早速始めてみましょう！
       </p>
       <v-img
             alt="Culoud Logo"
